@@ -8,9 +8,6 @@ dist/
 dist-ssr/
 client/dist/
 
-# Firebase cache
-.firebase/
-
 # Environment files
 .env
 .env.*

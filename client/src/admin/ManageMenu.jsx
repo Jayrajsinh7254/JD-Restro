@@ -159,36 +159,36 @@ const ManageMenu = () => {
     });
 
     return (
-        <div className="h-full flex flex-col space-y-6">
+        <div className="h-full flex flex-col">
             {/* Top Header */}
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
                         <span className="text-red font-bold text-xs uppercase tracking-widest bg-red/10 px-2.5 py-0.5 rounded">Live Menu Catalog</span>
                     </div>
                     <h1 className="h2-fluid text-dark font-serif font-black">Menu Items Management</h1>
-                    <p className="text-muted text-xs sm:text-sm font-medium">Add, modify, or retire items from the restaurant menu in real-time.</p>
+                    <p className="text-muted text-sm font-medium">Add, modify, or retire items from the restaurant menu in real-time.</p>
                 </div>
                 <button
                     onClick={handleOpenAddModal}
-                    className="btn-primary flex items-center gap-2 max-w-fit shadow-lg shadow-red/25 hover:shadow-xl transition-all rounded-xl py-2.5 px-4 text-xs uppercase tracking-wider"
+                    className="btn-primary flex items-center gap-2 max-w-fit shadow-lg shadow-red/25 hover:shadow-xl transition-all"
                 >
-                    <Plus size={16} /> Add New Dish
+                    <Plus size={18} /> Add New Dish
                 </button>
             </div>
 
             {/* Main Card Container */}
             <div className="glass-card bg-white rounded-2xl border border-[#e2d4c4]/80 shadow-sm flex-1 overflow-hidden flex flex-col">
                 {/* Search & Category Filter Toolbar */}
-                <div className="p-4 border-b border-[#e2d4c4]/60 flex flex-col sm:flex-row justify-between gap-3 bg-[#fcf9f5]">
+                <div className="p-4 border-b border-[#e2d4c4]/60 flex flex-col sm:flex-row justify-between gap-4 bg-[#fcf9f5]">
                     <div className="relative flex-1 max-w-md">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={16} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={18} />
                         <input
                             type="text"
                             placeholder="Search dishes by name or ingredients..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-9 input-field py-2 text-xs sm:text-sm bg-white border-[#e2d4c4] focus:border-red"
+                            className="pl-10 input-field py-2.5 text-sm bg-white border-[#e2d4c4] focus:border-red"
                         />
                     </div>
                     <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
@@ -196,7 +196,7 @@ const ManageMenu = () => {
                             <button
                                 key={cat}
                                 onClick={() => setSelectedCategory(cat)}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+                                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
                                     selectedCategory === cat
                                         ? 'bg-dark text-white shadow-sm'
                                         : 'bg-white text-brown/80 hover:bg-cream2 border border-[#e2d4c4]'
@@ -208,77 +208,28 @@ const ManageMenu = () => {
                     </div>
                 </div>
 
-                {/* Content */}
+                {/* Table Content */}
                 {loading ? (
                     <div className="flex-1 flex flex-col items-center justify-center p-16 text-muted gap-3">
                         <Loader2 className="w-8 h-8 animate-spin text-red" />
                         <span className="text-xs font-bold uppercase tracking-widest text-brown">Syncing Menu Items...</span>
                     </div>
-                ) : filteredItems.length > 0 ? (
-                    <>
-                        {/* 1. Mobile Cards View (< md) */}
-                        <div className="md:hidden divide-y divide-[#e2d4c4]/60 p-3 space-y-3 overflow-y-auto custom-scrollbar flex-1">
-                            {filteredItems.map((item) => (
-                                <div key={item._id} className="bg-white p-3.5 rounded-xl border border-[#e2d4c4] shadow-xs space-y-3">
-                                    <div className="flex gap-3">
-                                        <div className="w-16 h-16 rounded-xl bg-cream3 overflow-hidden border border-[#e2d4c4] shrink-0">
-                                            <img
-                                                src={item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop'}
-                                                alt={item.name}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="flex justify-between items-start gap-2">
-                                                <h4 className="font-serif font-black text-dark text-sm leading-tight">{item.name}</h4>
-                                                <span className="font-serif font-black text-red text-sm shrink-0">{formatPrice(item.price)}</span>
-                                            </div>
-                                            <span className="inline-block mt-1 px-2 py-0.5 bg-cream3 rounded text-[10px] font-bold uppercase text-brown">
-                                                {normalizeCat(item.category)}
-                                            </span>
-                                            <p className="text-muted text-[11px] line-clamp-1 mt-1">{item.description}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex justify-between items-center pt-2 border-t border-[#e2d4c4]/60">
-                                        <div className="flex gap-1">
-                                            {item.isVegetarian && <span className="text-[9px] font-bold bg-green-100 text-green-800 px-1.5 py-0.5 rounded">Veg</span>}
-                                            {item.isGlutenFree && <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">GF</span>}
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => handleOpenEditModal(item)}
-                                                className="p-1.5 border border-[#e2d4c4] rounded-lg bg-cream2 text-dark text-xs font-bold flex items-center gap-1"
-                                            >
-                                                <Edit2 size={13} /> Edit
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(item._id)}
-                                                className="p-1.5 border border-red/30 text-red rounded-lg bg-red/5"
-                                            >
-                                                <Trash2 size={13} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* 2. Desktop Table View (>= md) */}
-                        <div className="hidden md:block overflow-x-auto flex-1 custom-scrollbar">
-                            <table className="w-full text-left font-sans text-sm">
-                                <thead className="bg-[#1a0e06] text-white uppercase text-[11px] tracking-wider font-bold sticky top-0 z-10">
-                                    <tr>
-                                        <th className="px-6 py-4">Dish</th>
-                                        <th className="px-6 py-4">Category</th>
-                                        <th className="px-6 py-4">Price</th>
-                                        <th className="px-6 py-4">Dietary / Tags</th>
-                                        <th className="px-6 py-4">Status</th>
-                                        <th className="px-6 py-4 text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-[#e2d4c4]/60 bg-white">
-                                    {filteredItems.map((item) => (
+                ) : (
+                    <div className="overflow-x-auto flex-1 custom-scrollbar">
+                        <table className="w-full text-left font-sans text-sm">
+                            <thead className="bg-[#1a0e06] text-white uppercase text-[11px] tracking-wider font-bold sticky top-0 z-10">
+                                <tr>
+                                    <th className="px-6 py-4">Dish</th>
+                                    <th className="px-6 py-4">Category</th>
+                                    <th className="px-6 py-4">Price</th>
+                                    <th className="px-6 py-4">Dietary / Tags</th>
+                                    <th className="px-6 py-4">Status</th>
+                                    <th className="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#e2d4c4]/60 bg-white">
+                                {filteredItems.length > 0 ? (
+                                    filteredItems.map((item) => (
                                         <tr key={item._id} className="hover:bg-[#fbf7f2] transition-colors group text-dark font-medium">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-4">
@@ -346,26 +297,30 @@ const ManageMenu = () => {
                                                 </div>
                                             </td>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </>
-                ) : (
-                    <div className="px-6 py-20 text-center text-muted flex flex-col items-center gap-3">
-                        <Search size={36} className="opacity-30" />
-                        <span className="text-sm font-bold uppercase tracking-widest text-dark">No dishes match your filters</span>
-                        <button
-                            onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}
-                            className="text-red underline text-xs font-bold"
-                        >
-                            Clear filters
-                        </button>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="6" className="px-6 py-20 text-center text-muted">
+                                            <div className="flex flex-col items-center gap-3">
+                                                <Search size={36} className="opacity-30" />
+                                                <span className="text-sm font-bold uppercase tracking-widest text-dark">No dishes match your filters</span>
+                                                <button
+                                                    onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}
+                                                    className="text-red underline text-xs font-bold"
+                                                >
+                                                    Clear filters
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 )}
 
                 {/* Footer Bar */}
-                <div className="p-3.5 sm:p-4 border-t border-[#e2d4c4]/60 flex flex-col sm:flex-row justify-between items-center text-xs text-muted font-bold tracking-wider uppercase bg-[#fcf9f5] gap-2">
+                <div className="p-4 border-t border-[#e2d4c4]/60 flex flex-col sm:flex-row justify-between items-center text-xs text-muted font-bold tracking-wider uppercase bg-[#fcf9f5] gap-2">
                     <span>Showing {filteredItems.length} of {items.length} total dishes</span>
                     <span className="text-emerald-700 font-black">Changes sync instantly across public site</span>
                 </div>
@@ -386,134 +341,191 @@ const ManageMenu = () => {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="relative w-full max-w-xl bg-cream2 rounded-2xl shadow-2xl border border-white/20 overflow-hidden my-8 z-10 max-h-[92vh] flex flex-col"
+                            className="relative w-full max-w-xl bg-cream2 rounded-2xl shadow-2xl border border-white/20 overflow-hidden my-8 z-10"
                         >
-                            <div className="p-5 sm:p-6 border-b border-[#e2d4c4] flex justify-between items-center bg-white shrink-0">
+                            <div className="p-6 border-b border-[#e2d4c4] flex justify-between items-center bg-white">
                                 <div>
-                                    <h2 className="text-lg sm:text-xl font-serif font-black text-dark">
+                                    <h2 className="text-xl font-serif font-black text-dark">
                                         {isEditing ? 'Edit Dish Details' : 'Create New Menu Item'}
                                     </h2>
-                                    <p className="text-xs text-muted">Update pricing, description, and tags.</p>
+                                    <p className="text-xs text-muted font-sans">This item will be visible immediately on the live frontend menu.</p>
                                 </div>
                                 <button
-                                    onClick={() => setIsModalOpen(false)}
-                                    className="p-1.5 text-muted hover:text-red transition-colors"
+                                    onClick={() => !isSubmitting && setIsModalOpen(false)}
+                                    className="p-1 rounded-lg hover:bg-cream text-muted hover:text-red transition-colors"
                                 >
-                                    <X size={20} />
+                                    <X size={22} />
                                 </button>
                             </div>
 
-                            <form onSubmit={handleFormSubmit} className="p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
-                                <div>
-                                    <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
-                                        Dish Name *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={currentItem.name}
-                                        onChange={(e) => setCurrentItem({ ...currentItem, name: e.target.value })}
-                                        className="input-field bg-white text-sm"
-                                        placeholder="e.g. Pan-Seared Hokkaido Scallops"
-                                    />
-                                </div>
-
+                            <form onSubmit={handleFormSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="sm:col-span-2">
+                                        <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
+                                            Dish Name *
+                                        </label>
+                                        <input
+                                            required
+                                            type="text"
+                                            value={currentItem.name}
+                                            onChange={(e) => setCurrentItem({ ...currentItem, name: e.target.value })}
+                                            className="input-field bg-white border-[#e2d4c4] focus:border-red"
+                                            placeholder="e.g. Handmade Truffle Pasta"
+                                        />
+                                    </div>
+
                                     <div>
                                         <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
                                             Price ($ USD) *
                                         </label>
                                         <input
+                                            required
                                             type="number"
                                             step="0.01"
-                                            required
+                                            min="0"
                                             value={currentItem.price}
                                             onChange={(e) => setCurrentItem({ ...currentItem, price: e.target.value })}
-                                            className="input-field bg-white text-sm font-bold"
-                                            placeholder="38.50"
+                                            className="input-field bg-white border-[#e2d4c4] focus:border-red font-bold"
+                                            placeholder="28.00"
                                         />
                                     </div>
+
                                     <div>
                                         <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
                                             Category *
                                         </label>
                                         <select
+                                            className="input-field bg-white border-[#e2d4c4] focus:border-red font-bold"
                                             value={currentItem.category}
                                             onChange={(e) => setCurrentItem({ ...currentItem, category: e.target.value })}
-                                            className="input-field bg-white text-sm font-bold"
                                         >
-                                            <option value="Starters">Starters</option>
+                                            <option value="Starters">Starters / Appetizers</option>
                                             <option value="Main Course">Main Course</option>
-                                            <option value="Vegan">Vegan / Plant-Based</option>
-                                            <option value="Seafood">Seafood Catch</option>
+                                            <option value="Vegan">Vegan & Plant-Based</option>
+                                            <option value="Seafood">Seafood</option>
                                             <option value="Desserts">Desserts</option>
-                                            <option value="Drinks">Drinks & Wines</option>
+                                            <option value="Drinks">Drinks & Beverages</option>
                                         </select>
+                                    </div>
+
+                                    <div className="sm:col-span-2">
+                                        <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
+                                            Description & Ingredients
+                                        </label>
+                                        <textarea
+                                            rows="3"
+                                            value={currentItem.description}
+                                            onChange={(e) => setCurrentItem({ ...currentItem, description: e.target.value })}
+                                            className="input-field bg-white border-[#e2d4c4] focus:border-red resize-none text-sm"
+                                            placeholder="Fresh pasta with wild mushrooms, black truffle shavings, and parmesan..."
+                                        ></textarea>
+                                    </div>
+
+                                    <div className="sm:col-span-2">
+                                        <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
+                                            Tags (comma-separated)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={currentItem.tags}
+                                            onChange={(e) => setCurrentItem({ ...currentItem, tags: e.target.value })}
+                                            className="input-field bg-white border-[#e2d4c4] focus:border-red text-sm"
+                                            placeholder="e.g. Popular, Chef's Pick, Spicy, New"
+                                        />
+                                    </div>
+
+                                    {/* Dietary Toggles */}
+                                    <div className="sm:col-span-2 flex flex-wrap gap-6 p-4 bg-white rounded-xl border border-border">
+                                        <label className="flex items-center gap-3 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={currentItem.isVegetarian}
+                                                onChange={(e) => setCurrentItem({ ...currentItem, isVegetarian: e.target.checked })}
+                                                className="w-4 h-4 text-red rounded border-border focus:ring-red"
+                                            />
+                                            <span className="text-xs font-black uppercase tracking-wider text-dark">Vegetarian</span>
+                                        </label>
+
+                                        <label className="flex items-center gap-3 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={currentItem.isGlutenFree}
+                                                onChange={(e) => setCurrentItem({ ...currentItem, isGlutenFree: e.target.checked })}
+                                                className="w-4 h-4 text-red rounded border-border focus:ring-red"
+                                            />
+                                            <span className="text-xs font-black uppercase tracking-wider text-dark">Gluten-Free</span>
+                                        </label>
+                                    </div>
+
+                                    {/* Image Selection */}
+                                    <div className="sm:col-span-2">
+                                        <div className="flex justify-between items-center mb-1">
+                                            <label className="block text-[11px] font-black uppercase tracking-wider text-brown">
+                                                Dish Photo
+                                            </label>
+                                            <div className="flex gap-2 text-xs font-bold">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setImageMode('url')}
+                                                    className={`px-2 py-0.5 rounded ${imageMode === 'url' ? 'bg-dark text-white' : 'text-muted'}`}
+                                                >
+                                                    Image URL
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setImageMode('file')}
+                                                    className={`px-2 py-0.5 rounded ${imageMode === 'file' ? 'bg-dark text-white' : 'text-muted'}`}
+                                                >
+                                                    Upload File
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {imageMode === 'url' ? (
+                                            <input
+                                                type="url"
+                                                value={currentItem.image || ''}
+                                                onChange={(e) => setCurrentItem({ ...currentItem, image: e.target.value })}
+                                                className="input-field bg-white border-[#e2d4c4] focus:border-red text-sm"
+                                                placeholder="https://images.unsplash.com/..."
+                                            />
+                                        ) : (
+                                            <div className="flex items-center justify-center p-4 border-2 border-[#e2d4c4] border-dashed rounded-xl bg-white hover:border-red transition-all">
+                                                <label className="cursor-pointer text-center">
+                                                    <ImageIcon className="mx-auto h-8 w-8 text-muted mb-1" />
+                                                    <span className="text-xs font-black text-red">Choose image file</span>
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="sr-only"
+                                                        onChange={(e) => setCurrentItem({ ...currentItem, imageFile: e.target.files[0] })}
+                                                    />
+                                                    {currentItem.imageFile && (
+                                                        <p className="text-xs font-bold text-emerald-600 mt-1">
+                                                            Selected: {currentItem.imageFile.name}
+                                                        </p>
+                                                    )}
+                                                </label>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
-                                        Description
-                                    </label>
-                                    <textarea
-                                        rows="2"
-                                        value={currentItem.description}
-                                        onChange={(e) => setCurrentItem({ ...currentItem, description: e.target.value })}
-                                        className="input-field bg-white resize-none text-xs"
-                                        placeholder="Truffle emulsion, roasted asparagus, micro herbs..."
-                                    ></textarea>
-                                </div>
-
-                                <div>
-                                    <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
-                                        Dish Image (URL)
-                                    </label>
-                                    <input
-                                        type="url"
-                                        value={currentItem.image}
-                                        onChange={(e) => setCurrentItem({ ...currentItem, image: e.target.value })}
-                                        className="input-field bg-white text-xs"
-                                        placeholder="https://images.unsplash.com/photo-..."
-                                    />
-                                </div>
-
-                                <div className="flex flex-wrap gap-6 pt-1">
-                                    <label className="flex items-center gap-2 text-xs font-bold text-dark cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={currentItem.isVegetarian}
-                                            onChange={(e) => setCurrentItem({ ...currentItem, isVegetarian: e.target.checked })}
-                                            className="w-4 h-4 text-red rounded"
-                                        />
-                                        <span>Vegetarian</span>
-                                    </label>
-                                    <label className="flex items-center gap-2 text-xs font-bold text-dark cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={currentItem.isGlutenFree}
-                                            onChange={(e) => setCurrentItem({ ...currentItem, isGlutenFree: e.target.checked })}
-                                            className="w-4 h-4 text-red rounded"
-                                        />
-                                        <span>Gluten-Free</span>
-                                    </label>
-                                </div>
-
-                                <div className="pt-2 flex gap-3">
+                                <div className="pt-4 flex gap-3">
                                     <button
                                         type="button"
-                                        onClick={() => setIsModalOpen(false)}
-                                        className="flex-1 btn-outline bg-white py-3 border-[#e2d4c4] text-xs font-bold rounded-xl"
+                                        onClick={() => !isSubmitting && setIsModalOpen(false)}
+                                        className="flex-1 btn-outline bg-white py-3 border-[#e2d4c4] hover:border-dark"
                                         disabled={isSubmitting}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
+                                        className="flex-1 btn-primary py-3 flex items-center justify-center gap-2 shadow-lg shadow-red/25"
                                         disabled={isSubmitting}
-                                        className="flex-1 btn-primary py-3 flex items-center justify-center gap-2 shadow-lg shadow-red/25 text-xs font-bold rounded-xl"
                                     >
-                                        {isSubmitting ? 'Saving...' : (isEditing ? 'Save Changes' : 'Add to Menu')}
+                                        {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : (isEditing ? 'Save Changes' : 'Create & Publish Dish')}
                                     </button>
                                 </div>
                             </form>
