@@ -182,19 +182,23 @@ const ManageReservations = () => {
         }
     };
 
-    // Timezone-safe date extraction helper
     const getCleanDateString = (d) => {
         if (!d) return '';
-        if (typeof d === 'string') return d.split('T')[0];
         try {
-            return new Date(d).toISOString().split('T')[0];
-        } catch (e) {
-            return '';
-        }
+            if (typeof d === 'string') {
+                const s = d.split('T')[0].trim();
+                if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+            }
+            const dateObj = new Date(d);
+            if (!isNaN(dateObj.getTime())) {
+                return dateObj.toISOString().split('T')[0];
+            }
+        } catch (e) {}
+        return String(d).split('T')[0];
     };
 
     const formatDateDisplay = (d) => {
-        if (!d) return 'N/A';
+        if (!d) return 'Today';
         try {
             const clean = getCleanDateString(d);
             if (clean && /^\d{4}-\d{2}-\d{2}$/.test(clean)) {
@@ -291,60 +295,60 @@ const ManageReservations = () => {
             </div>
 
             {/* Quick Stat Highlights */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="bg-white p-4 rounded-2xl border border-[#e2d4c4] shadow-sm flex items-center justify-between">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[#e2d4c4] shadow-sm flex items-center justify-between">
                     <div>
                         <span className="text-[10px] font-black uppercase tracking-wider text-muted block">Total Bookings</span>
-                        <span className="text-2xl font-serif font-black text-dark">{reservations.length}</span>
+                        <span className="text-xl sm:text-2xl font-serif font-black text-dark">{reservations.length}</span>
                     </div>
-                    <div className="p-2.5 bg-cream3 rounded-xl text-brown">
+                    <div className="p-2 sm:p-2.5 bg-cream3 rounded-xl text-brown">
                         <Calendar size={18} />
                     </div>
                 </div>
 
-                <div className="bg-white p-4 rounded-2xl border border-amber-200 bg-amber-50/30 shadow-sm flex items-center justify-between">
+                <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-amber-200 bg-amber-50/30 shadow-sm flex items-center justify-between">
                     <div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 block">Pending Requests</span>
-                        <span className="text-2xl font-serif font-black text-amber-900">{pendingCount}</span>
+                        <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 block">Pending</span>
+                        <span className="text-xl sm:text-2xl font-serif font-black text-amber-900">{pendingCount}</span>
                     </div>
-                    <div className="p-2.5 bg-amber-100 rounded-xl text-amber-800">
+                    <div className="p-2 sm:p-2.5 bg-amber-100 rounded-xl text-amber-800">
                         <Clock size={18} />
                     </div>
                 </div>
 
-                <div className="bg-white p-4 rounded-2xl border border-emerald-200 bg-emerald-50/30 shadow-sm flex items-center justify-between">
+                <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-emerald-200 bg-emerald-50/30 shadow-sm flex items-center justify-between">
                     <div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 block">Confirmed Tables</span>
-                        <span className="text-2xl font-serif font-black text-emerald-900">{confirmedCount}</span>
+                        <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 block">Confirmed</span>
+                        <span className="text-xl sm:text-2xl font-serif font-black text-emerald-900">{confirmedCount}</span>
                     </div>
-                    <div className="p-2.5 bg-emerald-100 rounded-xl text-emerald-800">
+                    <div className="p-2 sm:p-2.5 bg-emerald-100 rounded-xl text-emerald-800">
                         <CheckCircle2 size={18} />
                     </div>
                 </div>
 
-                <div className="bg-white p-4 rounded-2xl border border-red/20 bg-red/5 shadow-sm flex items-center justify-between">
+                <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-red/20 bg-red/5 shadow-sm flex items-center justify-between">
                     <div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-red block">Today's Schedule</span>
-                        <span className="text-2xl font-serif font-black text-red">{todayCount}</span>
+                        <span className="text-[10px] font-black uppercase tracking-wider text-red block">Today's Guests</span>
+                        <span className="text-xl sm:text-2xl font-serif font-black text-red">{todayCount}</span>
                     </div>
-                    <div className="p-2.5 bg-red/10 rounded-xl text-red">
+                    <div className="p-2 sm:p-2.5 bg-red/10 rounded-xl text-red">
                         <Sparkles size={18} />
                     </div>
                 </div>
             </div>
 
-            {/* Main Table Card */}
+            {/* Main Table & Mobile Cards Card */}
             <div className="glass-card bg-white rounded-2xl border border-[#e2d4c4] shadow-sm flex-1 overflow-hidden flex flex-col">
                 {/* Search & Filter Toolbar */}
-                <div className="p-4 border-b border-[#e2d4c4] flex flex-col md:flex-row justify-between gap-4 bg-[#fcf9f5]">
-                    <div className="flex flex-wrap gap-3 items-center flex-1">
+                <div className="p-4 border-b border-[#e2d4c4] flex flex-col md:flex-row justify-between gap-3 sm:gap-4 bg-[#fcf9f5]">
+                    <div className="flex flex-wrap gap-2.5 sm:gap-3 items-center flex-1">
                         {/* Search Input */}
-                        <div className="relative flex-1 min-w-[240px] max-w-md">
+                        <div className="relative flex-1 min-w-[200px] sm:min-w-[240px] max-w-md">
                             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={16} />
                             <input
                                 type="text"
-                                placeholder="Search by guest name, email, phone, notes..."
-                                className="pl-10 input-field py-2.5 text-xs bg-white border-[#e2d4c4] focus:border-red w-full rounded-xl"
+                                placeholder="Search guest name, email, phone..."
+                                className="pl-10 input-field py-2 sm:py-2.5 text-xs bg-white border-[#e2d4c4] focus:border-red w-full rounded-xl"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
@@ -376,7 +380,7 @@ const ManageReservations = () => {
                     </div>
 
                     {/* Status Filter Tabs */}
-                    <div className="flex p-1 bg-cream3 rounded-xl border border-[#e2d4c4]/60 self-start md:self-auto overflow-x-auto">
+                    <div className="flex p-1 bg-cream3 rounded-xl border border-[#e2d4c4]/60 self-start md:self-auto overflow-x-auto no-scrollbar">
                         {[
                             { id: 'all', label: `All (${reservations.length})` },
                             { id: 'pending', label: `Pending (${pendingCount})` },
@@ -398,32 +402,108 @@ const ManageReservations = () => {
                     </div>
                 </div>
 
-                {/* Table Content */}
+                {/* Content Area */}
                 {loading ? (
                     <div className="flex-1 flex flex-col items-center justify-center p-20 text-muted gap-3">
                         <Loader2 className="w-8 h-8 animate-spin text-red" />
                         <span className="text-xs font-bold uppercase tracking-widest text-brown">Syncing live reservations...</span>
                     </div>
-                ) : (
-                    <div className="overflow-x-auto flex-1 custom-scrollbar">
-                        <table className="w-full text-left font-sans text-sm">
-                            <thead className="bg-dark text-white uppercase text-[11px] tracking-wider font-bold sticky top-0 z-10">
-                                <tr>
-                                    <th className="px-6 py-4">Guest Details</th>
-                                    <th className="px-6 py-4">Contact Info</th>
-                                    <th className="px-6 py-4">Reservation Date & Time</th>
-                                    <th className="px-6 py-4">Party & Occasion</th>
-                                    <th className="px-6 py-4">Current Status</th>
-                                    <th className="px-6 py-4 text-right">Quick Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-[#e2d4c4]/60 bg-white">
-                                {filteredReservations.length > 0 ? (
-                                    filteredReservations.map((res) => {
+                ) : filteredReservations.length > 0 ? (
+                    <>
+                        {/* 1. Mobile Cards View (Visible on < md) */}
+                        <div className="md:hidden divide-y divide-[#e2d4c4]/60 p-3 space-y-3 overflow-y-auto custom-scrollbar flex-1">
+                            {filteredReservations.map((res) => {
+                                const initials = `${(res.firstName || 'G').charAt(0)}${(res.lastName || 'P').charAt(0)}`.toUpperCase();
+                                return (
+                                    <div key={res._id} className="bg-white p-4 rounded-xl border border-[#e2d4c4] shadow-xs space-y-3">
+                                        <div className="flex justify-between items-start">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-xl bg-cream3 text-dark flex items-center justify-center font-serif font-black text-xs border border-[#e2d4c4] shadow-xs">
+                                                    {initials}
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-serif font-bold text-base text-dark">{res.firstName} {res.lastName}</h4>
+                                                    <p className="text-xs text-muted font-medium flex items-center gap-1.5 mt-0.5">
+                                                        <Clock size={12} className="text-red" /> {formatDateDisplay(res.date)} &bull; {res.time}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs ${
+                                                res.status === 'confirmed' ? 'bg-emerald-100 text-emerald-800' :
+                                                res.status === 'pending' ? 'bg-amber-100 text-amber-800' :
+                                                'bg-red-100 text-red-800'
+                                            }`}>
+                                                {res.status}
+                                            </span>
+                                        </div>
+
+                                        <div className="bg-cream2/60 p-3 rounded-lg text-xs space-y-1">
+                                            <div className="flex justify-between">
+                                                <span className="text-muted">Party:</span>
+                                                <span className="font-bold text-dark">{res.partySize || 2} Guests {res.occasion && res.occasion !== 'None' ? `(${res.occasion})` : ''}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-muted">Contact:</span>
+                                                <span className="font-bold text-dark">{res.phone}</span>
+                                            </div>
+                                            {res.specialRequests && (
+                                                <div className="pt-1 border-t border-[#e2d4c4]/40 text-muted italic">
+                                                    "{res.specialRequests}"
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex justify-between items-center pt-1">
+                                            <div className="flex gap-2">
+                                                {res.status !== 'confirmed' && (
+                                                    <button
+                                                        onClick={() => handleUpdateStatus(res._id, 'confirmed')}
+                                                        className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold shadow-xs"
+                                                    >
+                                                        Confirm
+                                                    </button>
+                                                )}
+                                                {res.status !== 'cancelled' && (
+                                                    <button
+                                                        onClick={() => handleUpdateStatus(res._id, 'cancelled')}
+                                                        className="px-2.5 py-1.5 border border-red text-red rounded-lg text-xs font-bold"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <button
+                                                onClick={() => handleDelete(res._id)}
+                                                className="p-1.5 text-muted hover:text-red transition-colors"
+                                                title="Delete record"
+                                            >
+                                                <Trash2 size={15} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* 2. Desktop Table View (Visible on >= md) */}
+                        <div className="hidden md:block overflow-x-auto flex-1 custom-scrollbar">
+                            <table className="w-full text-left font-sans text-sm">
+                                <thead className="bg-dark text-white uppercase text-[11px] tracking-wider font-bold sticky top-0 z-10">
+                                    <tr>
+                                        <th className="px-6 py-4">Guest Details</th>
+                                        <th className="px-6 py-4">Contact Info</th>
+                                        <th className="px-6 py-4">Reservation Date & Time</th>
+                                        <th className="px-6 py-4">Party & Occasion</th>
+                                        <th className="px-6 py-4">Current Status</th>
+                                        <th className="px-6 py-4 text-right">Quick Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-[#e2d4c4]/60 bg-white">
+                                    {filteredReservations.map((res) => {
                                         const initials = `${(res.firstName || 'G').charAt(0)}${(res.lastName || 'P').charAt(0)}`.toUpperCase();
                                         return (
                                             <tr key={res._id} className="hover:bg-[#fcf9f5] transition-colors group">
-                                                {/* Guest Name & Notes */}
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-start gap-3">
                                                         <div className="w-10 h-10 rounded-xl bg-cream3 text-dark flex items-center justify-center font-serif font-black text-sm border border-[#e2d4c4] shadow-sm shrink-0 mt-0.5">
@@ -444,7 +524,6 @@ const ManageReservations = () => {
                                                     </div>
                                                 </td>
 
-                                                {/* Contact */}
                                                 <td className="px-6 py-4">
                                                     <div className="flex flex-col text-xs space-y-1">
                                                         <a
@@ -462,7 +541,6 @@ const ManageReservations = () => {
                                                     </div>
                                                 </td>
 
-                                                {/* Date & Time */}
                                                 <td className="px-6 py-4">
                                                     <div className="flex flex-col">
                                                         <span className="font-bold text-dark text-sm">
@@ -474,7 +552,6 @@ const ManageReservations = () => {
                                                     </div>
                                                 </td>
 
-                                                {/* Party & Occasion */}
                                                 <td className="px-6 py-4">
                                                     <div className="flex flex-col gap-1 items-start">
                                                         <span className="font-bold text-dark text-xs sm:text-sm flex items-center gap-1.5 bg-cream px-2.5 py-1 rounded-lg border border-[#e2d4c4]">
@@ -488,7 +565,6 @@ const ManageReservations = () => {
                                                     </div>
                                                 </td>
 
-                                                {/* Status Badge */}
                                                 <td className="px-6 py-4">
                                                     <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm ${
                                                         res.status === 'confirmed' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
@@ -503,7 +579,6 @@ const ManageReservations = () => {
                                                     </span>
                                                 </td>
 
-                                                {/* Actions */}
                                                 <td className="px-6 py-4 text-right">
                                                     <div className="flex justify-end items-center gap-1.5">
                                                         {res.status !== 'confirmed' && (
@@ -544,36 +619,32 @@ const ManageReservations = () => {
                                                 </td>
                                             </tr>
                                         );
-                                    })
-                                ) : (
-                                    <tr>
-                                        <td colSpan="6" className="px-6 py-24 text-center text-muted">
-                                            <div className="flex flex-col items-center gap-3">
-                                                <div className="w-14 h-14 rounded-full bg-cream3 flex items-center justify-center text-muted">
-                                                    <Calendar size={28} />
-                                                </div>
-                                                <span className="text-sm font-bold uppercase tracking-widest text-dark">No reservations found</span>
-                                                <p className="text-xs text-muted max-w-sm">No reservations match your current filters or query.</p>
-                                                <button
-                                                    onClick={() => { setSearchQuery(''); setDateFilter(''); setStatusFilter('all'); }}
-                                                    className="btn-primary text-xs py-2 px-5 mt-2"
-                                                >
-                                                    Clear All Filters
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </>
+                ) : (
+                    <div className="px-6 py-20 text-center text-muted flex flex-col items-center gap-3">
+                        <div className="w-14 h-14 rounded-full bg-cream3 flex items-center justify-center text-muted">
+                            <Calendar size={28} />
+                        </div>
+                        <span className="text-sm font-bold uppercase tracking-widest text-dark">No reservations found</span>
+                        <p className="text-xs text-muted max-w-sm">No reservations match your current filters or query.</p>
+                        <button
+                            onClick={() => { setSearchQuery(''); setDateFilter(''); setStatusFilter('all'); }}
+                            className="btn-primary text-xs py-2 px-5 mt-2 rounded-xl"
+                        >
+                            Clear All Filters
+                        </button>
                     </div>
                 )}
 
                 {/* Footer Sync Status */}
-                <div className="p-4 border-t border-[#e2d4c4] flex flex-col sm:flex-row justify-between items-center text-xs text-muted font-bold tracking-wider uppercase bg-[#fcf9f5] gap-2">
+                <div className="p-3.5 sm:p-4 border-t border-[#e2d4c4] flex flex-col sm:flex-row justify-between items-center text-xs text-muted font-bold tracking-wider uppercase bg-[#fcf9f5] gap-2">
                     <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span>Showing {filteredReservations.length} of {reservations.length} bookings &bull; Last synchronized {lastSyncTime.toLocaleTimeString()}</span>
+                        <span>Showing {filteredReservations.length} of {reservations.length} bookings &bull; Updated {lastSyncTime.toLocaleTimeString()}</span>
                     </div>
                     <div className="flex gap-4">
                         <span className="text-emerald-700 font-black">Confirmed: {confirmedCount}</span>
@@ -598,24 +669,24 @@ const ManageReservations = () => {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="relative w-full max-w-lg bg-[#fdf8f2] rounded-3xl shadow-2xl border border-white/20 overflow-hidden my-8 z-10"
+                            className="relative w-full max-w-lg bg-[#fdf8f2] rounded-3xl shadow-2xl border border-white/20 overflow-hidden my-8 z-10 max-h-[92vh] flex flex-col"
                         >
-                            <div className="p-6 border-b border-[#e2d4c4] bg-white flex justify-between items-center">
+                            <div className="p-5 sm:p-6 border-b border-[#e2d4c4] bg-white flex justify-between items-center shrink-0">
                                 <div>
-                                    <h3 className="font-serif font-black text-xl text-dark">
-                                        Manual Table Reservation
+                                    <h3 className="font-serif font-black text-lg sm:text-xl text-dark">
+                                        Manual Table Booking
                                     </h3>
-                                    <p className="text-xs text-muted">Add phone or in-person walk-in guest reservation directly.</p>
+                                    <p className="text-xs text-muted">Register walk-in guests or phone reservations.</p>
                                 </div>
                                 <button
                                     onClick={() => setIsAddModalOpen(false)}
-                                    className="p-1 text-muted hover:text-red"
+                                    className="p-1.5 rounded-lg text-muted hover:text-red transition-colors"
                                 >
                                     ✕
                                 </button>
                             </div>
 
-                            <form onSubmit={handleCreateManualReservation} className="p-6 space-y-4">
+                            <form onSubmit={handleCreateManualReservation} className="p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
                                 <div>
                                     <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
                                         Guest Full Name *
@@ -626,23 +697,11 @@ const ManageReservations = () => {
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         className="input-field bg-white border-[#e2d4c4] text-sm"
-                                        placeholder="e.g. Robert Smith"
+                                        placeholder="e.g. Lord Sterling"
                                     />
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
-                                            Email Address
-                                        </label>
-                                        <input
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            className="input-field bg-white border-[#e2d4c4] text-sm"
-                                            placeholder="guest@example.com"
-                                        />
-                                    </div>
                                     <div>
                                         <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
                                             Phone Number
@@ -655,42 +714,6 @@ const ManageReservations = () => {
                                             placeholder="+1 (555) 000-0000"
                                         />
                                     </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                    <div>
-                                        <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
-                                            Date *
-                                        </label>
-                                        <input
-                                            required
-                                            type="date"
-                                            value={formData.date}
-                                            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                                            className="input-field bg-white border-[#e2d4c4] text-xs font-bold"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
-                                            Time *
-                                        </label>
-                                        <select
-                                            value={formData.time}
-                                            onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                                            className="input-field bg-white border-[#e2d4c4] text-xs font-bold"
-                                        >
-                                            <option value="17:00">5:00 PM</option>
-                                            <option value="17:30">5:30 PM</option>
-                                            <option value="18:00">6:00 PM</option>
-                                            <option value="18:30">6:30 PM</option>
-                                            <option value="19:00">7:00 PM</option>
-                                            <option value="19:30">7:30 PM</option>
-                                            <option value="20:00">8:00 PM</option>
-                                            <option value="20:30">8:30 PM</option>
-                                            <option value="21:00">9:00 PM</option>
-                                            <option value="21:30">9:30 PM</option>
-                                        </select>
-                                    </div>
                                     <div>
                                         <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
                                             Party Size *
@@ -698,10 +721,10 @@ const ManageReservations = () => {
                                         <select
                                             value={formData.partySize}
                                             onChange={(e) => setFormData({ ...formData, partySize: e.target.value })}
-                                            className="input-field bg-white border-[#e2d4c4] text-xs font-bold"
+                                            className="input-field bg-white border-[#e2d4c4] text-sm font-bold"
                                         >
                                             {[1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16].map(n => (
-                                                <option key={n} value={n}>{n} {n === 1 ? 'Guest' : 'Guests'}</option>
+                                                <option key={n} value={n}>{n} Guests</option>
                                             ))}
                                         </select>
                                     </div>
@@ -710,32 +733,28 @@ const ManageReservations = () => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
-                                            Occasion
+                                            Date *
                                         </label>
-                                        <select
-                                            value={formData.occasion}
-                                            onChange={(e) => setFormData({ ...formData, occasion: e.target.value })}
-                                            className="input-field bg-white border-[#e2d4c4] text-xs font-bold"
-                                        >
-                                            <option value="None">None / Standard</option>
-                                            <option value="Birthday">Birthday</option>
-                                            <option value="Anniversary">Anniversary</option>
-                                            <option value="Business">Business Dinner</option>
-                                            <option value="Proposal">Proposal</option>
-                                            <option value="Other">Other Celebration</option>
-                                        </select>
+                                        <input
+                                            type="date"
+                                            required
+                                            value={formData.date}
+                                            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                            className="input-field bg-white border-[#e2d4c4] text-sm font-bold"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
-                                            Initial Status
+                                            Time Slot *
                                         </label>
                                         <select
-                                            value={formData.status}
-                                            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                            className="input-field bg-white border-[#e2d4c4] text-xs font-bold"
+                                            value={formData.time}
+                                            onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                                            className="input-field bg-white border-[#e2d4c4] text-sm font-bold"
                                         >
-                                            <option value="confirmed">Confirmed</option>
-                                            <option value="pending">Pending</option>
+                                            {['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30'].map(t => (
+                                                <option key={t} value={t}>{t}</option>
+                                            ))}
                                         </select>
                                     </div>
                                 </div>
@@ -749,15 +768,15 @@ const ManageReservations = () => {
                                         value={formData.specialRequests}
                                         onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
                                         className="input-field bg-white border-[#e2d4c4] resize-none text-xs"
-                                        placeholder="Table preference, dietary allergies, VIP guest..."
+                                        placeholder="Booth preference, allergy notes, anniversary..."
                                     ></textarea>
                                 </div>
 
-                                <div className="pt-3 flex gap-3">
+                                <div className="pt-2 flex gap-3">
                                     <button
                                         type="button"
                                         onClick={() => setIsAddModalOpen(false)}
-                                        className="flex-1 btn-outline bg-white py-3 border-[#e2d4c4]"
+                                        className="flex-1 btn-outline bg-white py-3 border-[#e2d4c4] text-xs font-bold rounded-xl"
                                         disabled={isSubmitting}
                                     >
                                         Cancel
@@ -765,17 +784,9 @@ const ManageReservations = () => {
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="flex-1 btn-primary py-3 flex items-center justify-center gap-2 shadow-lg shadow-red/25"
+                                        className="flex-1 btn-primary py-3 flex items-center justify-center gap-2 shadow-lg shadow-red/25 text-xs font-bold rounded-xl"
                                     >
-                                        {isSubmitting ? (
-                                            <>
-                                                <Loader2 className="animate-spin" size={16} /> Creating...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Check size={16} /> Save Table Booking
-                                            </>
-                                        )}
+                                        {isSubmitting ? 'Creating...' : 'Confirm Table'}
                                     </button>
                                 </div>
                             </form>

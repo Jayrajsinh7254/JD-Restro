@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Search, Plus, Minus, Check, ArrowRight, Sparkles, MapPin, Clock, Truck, ShieldCheck, Leaf } from 'lucide-react';
+import { ShoppingBag, Search, Plus, Minus, Check, ArrowRight, Sparkles, MapPin, Clock, Truck, ShieldCheck, Leaf, X } from 'lucide-react';
 import { useMenu } from '../hooks/useMenu';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../utils/formatPrice';
@@ -108,7 +108,7 @@ const OrderOnline = () => {
     return (
         <div className="pt-20 min-h-screen bg-[#fdf8f2] pb-28">
             {/* Header */}
-            <section className="py-16 md:py-20 text-center bg-[#1a0e06] text-white relative overflow-hidden bg-radial-glow">
+            <section className="py-14 sm:py-20 text-center bg-[#1a0e06] text-white relative overflow-hidden bg-radial-glow">
                 <div className="container-wide relative z-10 px-4 sm:px-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -120,7 +120,7 @@ const OrderOnline = () => {
                             <Truck size={13} className="text-red" /> Direct Dining & Takeout Service
                         </span>
                         <h1 className="h1-fluid mb-4 text-[#fdf8f2]">Order Online</h1>
-                        <p className="body-fluid text-white/70 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+                        <p className="body-fluid text-white/70 max-w-xl mx-auto text-xs sm:text-base leading-relaxed">
                             Enjoy Drizzle’s signature haute cuisine from the comfort of your home or private gathering.
                         </p>
                     </motion.div>
@@ -128,7 +128,7 @@ const OrderOnline = () => {
             </section>
 
             {/* Main Order Layout (Dishes List + Sticky Cart Summary) */}
-            <div className="container-wide px-4 sm:px-6 lg:px-8 mt-10">
+            <div className="container-wide px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
                     {/* Left Column: Category Pills & Menu Dish Cards */}
@@ -141,19 +141,19 @@ const OrderOnline = () => {
                                 <div className="flex p-1 bg-cream3 rounded-xl w-full sm:w-auto">
                                     <button
                                         onClick={() => setOrderType('delivery')}
-                                        className={`flex-1 sm:flex-initial px-6 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                                        className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
                                             orderType === 'delivery' ? 'bg-dark text-white shadow-sm' : 'text-brown hover:text-dark'
                                         }`}
                                     >
-                                        <Truck size={14} /> Contactless Delivery
+                                        <Truck size={14} /> Delivery
                                     </button>
                                     <button
                                         onClick={() => setOrderType('pickup')}
-                                        className={`flex-1 sm:flex-initial px-6 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                                        className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
                                             orderType === 'pickup' ? 'bg-dark text-white shadow-sm' : 'text-brown hover:text-dark'
                                         }`}
                                     >
-                                        <MapPin size={14} /> Restaurant Pickup
+                                        <MapPin size={14} /> Pickup
                                     </button>
                                 </div>
 
@@ -167,6 +167,14 @@ const OrderOnline = () => {
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         className="pl-9 pr-3 py-2 input-field text-xs bg-[#fdf8f2] border-[#e2d4c4]"
                                     />
+                                    {searchQuery && (
+                                        <button
+                                            onClick={() => setSearchQuery('')}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-muted hover:text-red"
+                                        >
+                                            ✕
+                                        </button>
+                                    )}
                                 </div>
                             </div>
 
@@ -194,14 +202,14 @@ const OrderOnline = () => {
                                 Loading Dishes from Kitchen...
                             </div>
                         ) : filteredItems.length > 0 ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                                 {filteredItems.map(item => (
                                     <div
                                         key={item._id}
-                                        className="bg-white rounded-2xl border border-[#e2d4c4] p-5 flex flex-col justify-between shadow-sm hover:shadow-card transition-all group"
+                                        className="bg-white rounded-2xl border border-[#e2d4c4] p-4 sm:p-5 flex flex-col justify-between shadow-sm hover:shadow-card transition-all group"
                                     >
                                         <div>
-                                            <div className="h-44 rounded-xl overflow-hidden mb-4 relative bg-cream3">
+                                            <div className="h-44 sm:h-48 rounded-xl overflow-hidden mb-4 relative bg-cream3">
                                                 <img
                                                     src={item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop'}
                                                     alt={item.name}
@@ -209,35 +217,35 @@ const OrderOnline = () => {
                                                 />
                                                 <div className="absolute top-2.5 left-2.5 flex gap-1">
                                                     {item.isVegetarian && (
-                                                        <span className="bg-emerald-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded">
+                                                        <span className="bg-emerald-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded shadow-xs">
                                                             Veg
                                                         </span>
                                                     )}
                                                     {item.isGlutenFree && (
-                                                        <span className="bg-amber-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded">
+                                                        <span className="bg-amber-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded shadow-xs">
                                                             GF
                                                         </span>
                                                     )}
                                                 </div>
                                             </div>
 
-                                            <div className="flex justify-between items-baseline mb-1.5">
-                                                <h3 className="font-serif font-bold text-lg text-dark group-hover:text-red transition-colors">
+                                            <div className="flex justify-between items-baseline mb-1.5 gap-2">
+                                                <h3 className="font-serif font-bold text-base sm:text-lg text-dark group-hover:text-red transition-colors">
                                                     {item.name}
                                                 </h3>
-                                                <span className="font-serif font-black text-red text-base">
+                                                <span className="font-serif font-black text-red text-base shrink-0">
                                                     {formatPrice(item.price)}
                                                 </span>
                                             </div>
 
-                                            <p className="text-muted text-xs line-clamp-2 mb-5 leading-relaxed font-sans">
+                                            <p className="text-muted text-xs line-clamp-2 mb-4 leading-relaxed font-sans">
                                                 {item.description}
                                             </p>
                                         </div>
 
                                         <button
                                             onClick={() => addToCart(item)}
-                                            className="w-full btn-outline py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-red hover:text-white"
+                                            className="w-full btn-outline py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-red hover:text-white transition-all shadow-xs"
                                         >
                                             <Plus size={14} /> Add to Bag
                                         </button>
@@ -258,9 +266,9 @@ const OrderOnline = () => {
 
                     </div>
 
-                    {/* Right Column: Sticky Order Summary & Checkout Trigger */}
+                    {/* Right Column: Sticky Order Summary for Large Screens */}
                     <div className="lg:col-span-4 sticky top-24 space-y-6">
-                        <div className="bg-white rounded-2xl border border-[#e2d4c4] p-6 shadow-lg">
+                        <div className="bg-white rounded-2xl border border-[#e2d4c4] p-5 sm:p-6 shadow-lg">
                             <div className="flex justify-between items-center pb-4 border-b border-[#e2d4c4]">
                                 <div className="flex items-center gap-2">
                                     <ShoppingBag className="text-red" size={20} />
@@ -343,6 +351,32 @@ const OrderOnline = () => {
                 </div>
             </div>
 
+            {/* Mobile Bottom Sticky Action Floating Bar */}
+            {cartItems.length > 0 && (
+                <div className="lg:hidden fixed bottom-4 left-4 right-4 z-40">
+                    <div className="bg-dark text-white p-3.5 sm:p-4 rounded-2xl shadow-2xl border border-white/20 flex items-center justify-between backdrop-blur-md">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-red text-white flex items-center justify-center font-bold text-xs shadow-md">
+                                {cartTotalItems}
+                            </div>
+                            <div>
+                                <span className="text-[10px] uppercase text-white/60 font-bold block">Total Amount</span>
+                                <span className="font-serif font-black text-white text-base">
+                                    {formatPrice(cartTotalAmount * 1.08875)}
+                                </span>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={() => setIsCheckingOut(true)}
+                            className="btn-primary py-2.5 px-4 text-xs font-black uppercase tracking-wider rounded-xl shadow-md shadow-red/30 flex items-center gap-1.5"
+                        >
+                            <span>Checkout</span> <ArrowRight size={14} />
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Checkout Modal */}
             <AnimatePresence>
                 {isCheckingOut && (
@@ -358,24 +392,24 @@ const OrderOnline = () => {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="relative w-full max-w-lg bg-[#fdf8f2] rounded-3xl shadow-2xl border border-white/20 overflow-hidden my-8 z-10"
+                            className="relative w-full max-w-lg bg-[#fdf8f2] rounded-3xl shadow-2xl border border-white/20 overflow-hidden my-8 z-10 max-h-[92vh] flex flex-col"
                         >
-                            <div className="p-6 border-b border-[#e2d4c4] bg-white flex justify-between items-center">
+                            <div className="p-5 sm:p-6 border-b border-[#e2d4c4] bg-white flex justify-between items-center shrink-0">
                                 <div>
-                                    <h3 className="font-serif font-black text-xl text-dark">
+                                    <h3 className="font-serif font-black text-lg sm:text-xl text-dark">
                                         {orderType === 'delivery' ? 'Delivery Details' : 'Pickup Information'}
                                     </h3>
                                     <p className="text-xs text-muted">Complete your dining order with Drizzle.</p>
                                 </div>
                                 <button
                                     onClick={() => setIsCheckingOut(false)}
-                                    className="p-1 text-muted hover:text-red"
+                                    className="p-1.5 rounded-lg text-muted hover:text-red transition-colors"
                                 >
-                                    ✕
+                                    <X size={20} />
                                 </button>
                             </div>
 
-                            <form onSubmit={handleCheckoutSubmit} className="p-6 space-y-4">
+                            <form onSubmit={handleCheckoutSubmit} className="p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
                                 <div>
                                     <label className="block text-[11px] font-black uppercase tracking-wider text-brown mb-1">
                                         Full Name *
@@ -385,7 +419,7 @@ const OrderOnline = () => {
                                         type="text"
                                         value={formData.customerName}
                                         onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                                        className="input-field bg-white border-[#e2d4c4]"
+                                        className="input-field bg-white border-[#e2d4c4] text-sm"
                                         placeholder="e.g. Eleanor Vance"
                                     />
                                 </div>
@@ -400,7 +434,7 @@ const OrderOnline = () => {
                                             type="email"
                                             value={formData.customerEmail}
                                             onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
-                                            className="input-field bg-white border-[#e2d4c4]"
+                                            className="input-field bg-white border-[#e2d4c4] text-sm"
                                             placeholder="eleanor@example.com"
                                         />
                                     </div>
@@ -413,7 +447,7 @@ const OrderOnline = () => {
                                             type="tel"
                                             value={formData.customerPhone}
                                             onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
-                                            className="input-field bg-white border-[#e2d4c4]"
+                                            className="input-field bg-white border-[#e2d4c4] text-sm"
                                             placeholder="+1 (555) 019-2834"
                                         />
                                     </div>
@@ -429,7 +463,7 @@ const OrderOnline = () => {
                                             type="text"
                                             value={formData.deliveryAddress}
                                             onChange={(e) => setFormData({ ...formData, deliveryAddress: e.target.value })}
-                                            className="input-field bg-white border-[#e2d4c4]"
+                                            className="input-field bg-white border-[#e2d4c4] text-sm"
                                             placeholder="Apartment, suite, street address"
                                         />
                                     </div>
@@ -448,7 +482,7 @@ const OrderOnline = () => {
                                     ></textarea>
                                 </div>
 
-                                <div className="pt-4 border-t border-[#e2d4c4] flex justify-between items-center text-sm font-serif font-black text-dark">
+                                <div className="pt-3 border-t border-[#e2d4c4] flex justify-between items-center text-sm font-serif font-black text-dark">
                                     <span>Total to Pay:</span>
                                     <span className="text-red text-xl font-bold">{formatPrice(cartTotalAmount * 1.08875)}</span>
                                 </div>
@@ -457,7 +491,7 @@ const OrderOnline = () => {
                                     <button
                                         type="button"
                                         onClick={() => setIsCheckingOut(false)}
-                                        className="flex-1 btn-outline bg-white py-3 border-[#e2d4c4]"
+                                        className="flex-1 btn-outline bg-white py-3 border-[#e2d4c4] text-xs font-bold rounded-xl"
                                         disabled={isSubmitting}
                                     >
                                         Back
@@ -465,7 +499,7 @@ const OrderOnline = () => {
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="flex-1 btn-primary py-3 flex items-center justify-center gap-2 shadow-lg shadow-red/25"
+                                        className="flex-1 btn-primary py-3 flex items-center justify-center gap-2 shadow-lg shadow-red/25 text-xs font-bold rounded-xl"
                                     >
                                         {isSubmitting ? 'Placing Order...' : 'Confirm Order'}
                                     </button>
