@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             return {
                 success: false,
-                error: error.response?.data?.message || 'An error occurred during login'
+                error: error.response?.data?.message || error.message || 'An error occurred during login'
             };
         }
     };
