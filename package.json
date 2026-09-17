@@ -5,7 +5,9 @@
     "scripts": {
         "client": "npm run dev --prefix client",
         "server": "npm run dev --prefix server",
-        "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\""
+        "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+        "build": "npm run build --prefix client",
+        "deploy": "npm run build && firebase deploy --only hosting"
     },
     "devDependencies": {
         "concurrently": "^8.2.2"
