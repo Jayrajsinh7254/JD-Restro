@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: jd-restro-fullstack
+    env: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MOCK_DATABASE
+        value: "true"
+      - key: JWT_SECRET
+        generateValue: true
